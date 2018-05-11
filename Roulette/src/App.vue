@@ -35,6 +35,9 @@
         </li>
       </ul>
     </div>
+    <div class="countingDown popUp" v-if="gameState.isCountingDown">
+      <h1>{{ countingNumber }}</h1>
+    </div>
     <div class="showResult popUp" v-if="gameState.isShowResult">
       <li v-for="(item, key) in gamer[singlePlayerID]">
         <span v-if="key !== 'tickets' && key !== 'userId' ">
@@ -66,9 +69,11 @@ export default {
       gameTime: 1,
       singlePlayerID: 'test',
       singlePlayerName: "",
+      countingNumber: 6,
       gameState: {
         isRegister: true,
         isChooseCard: false,
+        isCountingDown: false,
         isRollingPlate: false,
         isShowResult: false
       },
@@ -178,6 +183,9 @@ export default {
         console.log(this.ticketNumber)     
       }
     },
+    countDownToRollingPlate () {
+      this.countingNumber -= 1
+    },
     settleAccounts (singlePlayerID = 'test') {
       // gameStatus = stop
       console.log("I am coming")
@@ -203,8 +211,12 @@ export default {
         this.gameState.isChooseCard = true
         
         this.drawTheWinningNumbers()
-      } else if ( 36 === value) {
+      } else if ( 36 <= value && value <= 40) {
         this.gameState.isChooseCard = false
+        this.gameState.isCountingDown = true
+        this.countDownToRollingPlate()
+      } else if ( 41 === value) {
+        this.gameState.isCountingDown = false
         this.gameState.isRollingPlate = true
         this.$refs.plateComponent.rollingPlate()
         setTimeout(()=>{
@@ -282,6 +294,11 @@ export default {
         color: white;
         cursor: pointer;
       }
+    }
+  }
+  .countingDown {
+    h1 {
+      color: red
     }
   }
 }
