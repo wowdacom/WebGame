@@ -9,10 +9,10 @@
 <script>
 export default {
   name: 'plate',
-  props: ['ticket-number', 'rolling-event'],
+  props: ['rouletteg-plate', 'ticket-number', 'rolling-event'],
   data: function () {
     return {
-      roulettegPlate: ['salmon', 'blue', 'green', 'blue', 'red', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'green', 'blue', 'purple', 'blue', 'green', 'blue', 'red', 'blue', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'green', 'blue', 'gold', 'green', 'blue', 'green', 'blue', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'blue', 'blue', 'purple', 'blue', 'green', 'blue', 'red', 'blue', 'yellow', 'blue', 'green', 'blue', 'red', 'blue', 'green', 'blue' ],
+      // roulettegPlate: ['salmon', 'blue', 'green', 'blue', 'red', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'green', 'blue', 'purple', 'blue', 'green', 'blue', 'red', 'blue', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'green', 'blue', 'gold', 'green', 'blue', 'green', 'blue', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'blue', 'blue', 'purple', 'blue', 'green', 'blue', 'red', 'blue', 'yellow', 'blue', 'green', 'blue', 'red', 'blue', 'green', 'blue' ],
       pace: 0,
       stopRolling: false,
       animationID: 0,

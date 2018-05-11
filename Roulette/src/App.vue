@@ -3,7 +3,7 @@
     <h1>{{ gameTime }}</h1>
     <div class="wrapper">
       <div class="showPlate">
-        <plate-component :ticket-number="ticketNumber" ref="plateComponent"></plate-component>
+        <plate-component :rouletteg-plate="roulettegPlate" :ticket-number="ticketNumber" ref="plateComponent"></plate-component>
       </div>
       <div class="showUserInfo">
         <ul>
@@ -29,12 +29,24 @@
       </div>
     </div>
     <div class="chooseCards popUp" v-if="gameState.isChooseCard">
-    <ul>
-      <li v-for="(item, key) in rules" :style="{background: key}" @click="chooseCards(singlePlayerID, key)">
-        {{ key }}
+      <ul>
+        <li v-for="(item, key) in rules" :style="{background: key}" @click="chooseCards(singlePlayerID, key)">
+          {{ key }}
+        </li>
+      </ul>
+    </div>
+    <div class="showResult popUp" v-if="gameState.isShowResult">
+      <li v-for="(item, key) in gamer[singlePlayerID]">
+        <span v-if="key !== 'tickets' && key !== 'userId' ">
+          {{ key }} : {{ item }}
+        </span>  
       </li>
-    </ul>
-  </div>
+      <li v-for="(item, key) in gamer[singlePlayerID].tickets">
+        <span v-if="key !== 'tickets' && key !== 'userId' ">
+          {{ key }} : {{ item }}
+        </span>  
+      </li>
+    </div>
     <!-- <router-view/> -->
   </div>
 </template>
@@ -69,6 +81,7 @@ export default {
         'gold': 51,
         'salmon': 51
       },
+      roulettegPlate: ['salmon', 'blue', 'green', 'blue', 'red', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'green', 'blue', 'purple', 'blue', 'green', 'blue', 'red', 'blue', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'green', 'blue', 'gold', 'green', 'blue', 'green', 'blue', 'green', 'blue', 'yellow', 'blue', 'red', 'blue', 'blue', 'blue', 'purple', 'blue', 'green', 'blue', 'red', 'blue', 'yellow', 'blue', 'green', 'blue', 'red', 'blue', 'green', 'blue' ],
       gamer: {
         'test': {
           'name': "Anonymous",
@@ -101,6 +114,18 @@ export default {
   methods: {
     createId () {
       return '_' + Math.random().toString(36).substr(2, 9);
+    },
+    ticketReset (singlePlayerID = 'test') {
+      console.log(this.gamer[singlePlayerID].tickets)
+      this.gamer[singlePlayerID].tickets = {       
+            'blue': 0,
+            'green': 0,
+            'red': 0,
+            'yellow': 0,
+            'purple': 0,
+            'gold': 0,
+            'salmon': 0
+          }
     },
     register (name = 'anonymous') {
       let userId = this.createId()
@@ -152,22 +177,45 @@ export default {
       if(this.showTest) {
         console.log(this.ticketNumber)     
       }
+    },
+    settleAccounts (singlePlayerID = 'test') {
+      // gameStatus = stop
+      console.log("I am coming")
+      var currentTicket = this.roulettegPlate[this.ticketNumber]
+      console.log(currentTicket)
+      if(this.gamer[singlePlayerID].tickets[currentTicket]){
+        this.gamer[singlePlayerID].balance += this.gamer[singlePlayerID].tickets[currentTicket]*this.rules[currentTicket]
+        if(this.showTest) {
+          console.log(this.gamer[singlePlayerID].balance)
+        }      
+      } else {
+        console.log("Nice Try!")
+      }
+      setTimeout(()=>{
+        this.ticketReset(this.singlePlayerID)
+      }, 5000)
     }
   },
   watch: {
     gameTime: function (value) {
       if ( 1 <= value && value <= 35 && this.singlePlayerID !== 'test') {
+        this.gameState.isShowResult = false
         this.gameState.isChooseCard = true
-      } else if ( 36 === value) {
+        
         this.drawTheWinningNumbers()
+      } else if ( 36 === value) {
         this.gameState.isChooseCard = false
         this.gameState.isRollingPlate = true
         this.$refs.plateComponent.rollingPlate()
         setTimeout(()=>{
           this.$refs.plateComponent.stopPlate()
         },5000)
+      } else if ( 51 === value) {
+        this.gameState.isRollingPlate = false
+        this.gameState.isShowResult = true
+        this.settleAccounts(this.singlePlayerID)
       } else {
-        this.rollingEvent = false
+
       }
     }
   }
@@ -191,8 +239,7 @@ export default {
     }
     .showUserInfo {
       float: left;
-    ul {
-      
+    ul {  
       li {
         list-style: none;
       }
