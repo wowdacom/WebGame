@@ -102,22 +102,44 @@ Game.prototype.storeRepository = function(){
 
 var DrawTetris = function(){
   this.shape = [
-    [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 1, y:-1}], //I
-    [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}], //J
-    [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}], //L
-    [{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}], //O
-    [{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}], //S
-    [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}], //T
-    [{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}]  //Z
+    [[{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 1, y:-1}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 3, y:-3}],
+     [{x: 2, y:-4}, {x:2, y:-3}, {x:2, y:-2}, {x: 2, y:-1}],
+     [{x: 0, y:-2}, {x:1, y:-2}, {x:2, y:-2}, {x: 3, y:-2}]], //I
+    [[{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}]], //J
+    [[{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}]], //L
+    [[{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}],
+     [{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}],
+     [{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}],
+     [{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}]], //O
+    [[{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}],
+     [{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}],
+     [{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}],
+     [{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}]], //S
+    [[{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}]], //T
+    [[{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}]]  //Z
   ]; //考慮要不要用對 center 關係
   this.color = ["rgba(122,199,79, 0.5)", "rgba(255,102,102, 0.5)", "rgba(55,114,255, 0.5)", "rgba(244,224,77, 0.5)", "rgba(75,41,107, 0.5)", "rgba(8,160,69, 0.5)", "rgba(97,198,236, 0.5)"]
   
   this.body = []
   this.speed = new Vector(0, 1) //向下走
-  this.type = 6 //哪種型態的拼圖
+  this.type = 0 //哪種型態的拼圖
   this.rotate = 0 //控制不同的拼圖角度
   this.repository = []
-  this.shape[this.type].forEach((block)=>{
+  this.currentHeight = new Vector(1, -3) //控制目前高度，進行旋轉或型態轉換
+  this.shape[this.type][this.rotate].forEach((block)=>{
     this.body.push(new Vector(block.x, block.y))
   }) //不同型態的拼圖
   
@@ -126,15 +148,21 @@ var DrawTetris = function(){
 DrawTetris.prototype.move = function(dir, gameWidth, gameHeight){
   var target
     if (dir == "Up" && this.checkBoundaryTop(gameWidth, gameHeight)) {
+      this.body.length = 0
+      this.rotate = (this.rotate + 1)%4
+      this.shape[this.type][this.rotate].forEach((block)=>{
+        this.body.push(new Vector(block.x, block.y))
+      })
+      console.log(this.rotate)
       target = new Vector(0, -1)
     }
-    if (dir == "Down"  && this.checkBoundaryBottom(gameWidth, gameHeight) && this.checkBoundaryRepository()) {
+    if (dir == "Down"  && this.checkBoundaryBottom(gameWidth, gameHeight) && this.checkBoundaryRepositoryDown()) {
       target = new Vector(0, 1)
     }
-    if (dir == "Left" && this.checkBoundaryLeft(gameWidth, gameHeight)) {
+    if (dir == "Left" && this.checkBoundaryLeft(gameWidth, gameHeight) && this.checkBoundaryRepositoryLeft()) {
       target = new Vector(-1, 0)
     }
-    if (dir == "Right" && this.checkBoundaryRight(gameWidth, gameHeight)) {
+    if (dir == "Right" && this.checkBoundaryRight(gameWidth, gameHeight) && this.checkBoundaryRepositoryRight()) {
       target = new Vector(1, 0)
     }
     this.body.forEach((block)=>{
@@ -145,6 +173,8 @@ DrawTetris.prototype.move = function(dir, gameWidth, gameHeight){
 
 DrawTetris.prototype.update = function(){
   
+  this.currentHeight.move(this.speed.x, this.speed.y)
+  console.log(this.currentHeight)
   this.body.forEach((block)=>{
     block.move(this.speed.x, this.speed.y)
   })
@@ -154,7 +184,7 @@ DrawTetris.prototype.update = function(){
 DrawTetris.prototype.newDrawTetris = function(){  
   this.body.length = 0
   this.type = 1
-  this.shape[this.type].forEach((block)=>{
+  this.shape[this.type][this.rotate].forEach((block)=>{
     this.body.push(new Vector(block.x, block.y))
   })
 }
@@ -202,7 +232,7 @@ DrawTetris.prototype.checkBoundaryBottom = function(gameWidth, gameHeight){
   return yInRange
 }
 
-DrawTetris.prototype.checkBoundaryRepository = function(){
+DrawTetris.prototype.checkBoundaryRepositoryDown = function(){
   let yInRange = false
   if (this.repository.length !== 0) {
     this.repository.forEach((rblock)=>{
@@ -213,7 +243,34 @@ DrawTetris.prototype.checkBoundaryRepository = function(){
       })
     })
   }
-  console.log(yInRange)
+  return !yInRange
+}
+
+DrawTetris.prototype.checkBoundaryRepositoryLeft = function(){
+  let yInRange = false
+  if (this.repository.length !== 0) {
+    this.repository.forEach((rblock)=>{
+      this.body.forEach((bblock)=>{
+        var currentLogic = false
+        currentLogic = bblock.x == rblock.x + 1 && bblock.y == rblock.y ? true : false
+        yInRange = yInRange || currentLogic
+      })
+    })
+  }
+  return !yInRange
+}
+
+DrawTetris.prototype.checkBoundaryRepositoryRight = function(){
+  let yInRange = false
+  if (this.repository.length !== 0) {
+    this.repository.forEach((rblock)=>{
+      this.body.forEach((bblock)=>{
+        var currentLogic = false
+        currentLogic = bblock.x == rblock.x - 1 && bblock.y == rblock.y ? true : false
+        yInRange = yInRange || currentLogic
+      })
+    })
+  }
   return !yInRange
 }
 
@@ -242,7 +299,7 @@ Game.prototype.render = function(){
 Game.prototype.update = function(){
   
   if(this.start){
-      if(this.currentTetris.checkBoundaryRepository()==false){
+      if(this.currentTetris.checkBoundaryRepositoryDown()==false){
         this.storeRepository()
         this.currentTetris.newDrawTetris()
       }
