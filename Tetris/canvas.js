@@ -71,6 +71,7 @@ Game.prototype.init = function(){
 Game.prototype.startGame = function() {
   this.start = true
   this.currentTetris = new DrawTetris()
+  $(".panel").hide()
 }
 
 Game.prototype.pauseGame = function() {
@@ -107,38 +108,38 @@ var DrawTetris = function(){
      [{x: 2, y:-4}, {x:2, y:-3}, {x:2, y:-2}, {x: 2, y:-1}],
      [{x: 0, y:-2}, {x:1, y:-2}, {x:2, y:-2}, {x: 3, y:-2}]], //I
     [[{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}],
-     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}],
-     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}],
-     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 0, y:-2}]], //J
+     [{x: 0, y:-4}, {x:0, y:-3}, {x:1, y:-3}, {x: 2, y:-3}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-4}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 2, y:-2}]], //J
     [[{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
-     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
-     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
-     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}]], //L
+     [{x: 0, y:-3}, {x:0, y:-2}, {x:1, y:-3}, {x: 2, y:-3}],
+     [{x: 0, y:-4}, {x:1, y:-4}, {x:1, y:-3}, {x: 1, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 2, y:-2}]], //L
     [[{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}],
      [{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}],
      [{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}],
      [{x: 0, y:-4}, {x:1, y:-4}, {x:0, y:-3}, {x: 1, y:-3}]], //O
     [[{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}],
-     [{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}],
-     [{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}],
-     [{x: 1, y:-3}, {x:2, y:-3}, {x:0, y:-2}, {x: 1, y:-2}]], //S
+     [{x: 0, y:-4}, {x:0, y:-3}, {x:1, y:-3}, {x: 1, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-4}, {x: 2, y:-4}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:2, y:-3}, {x: 2, y:-2}]], //S
     [[{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}],
-     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}],
-     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}],
-     [{x: 0, y:-3}, {x:1, y:-3}, {x:2, y:-3}, {x: 1, y:-2}]], //T
+     [{x: 0, y:-3}, {x:1, y:-4}, {x:1, y:-3}, {x: 1, y:-2}],
+     [{x: 0, y:-3}, {x:1, y:-4}, {x:1, y:-3}, {x: 2, y:-3}],
+     [{x: 1, y:-4}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-3}]], //T
     [[{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
-     [{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
-     [{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}],
-     [{x: 0, y:-3}, {x:1, y:-3}, {x:1, y:-2}, {x: 2, y:-2}]]  //Z
+     [{x: 0, y:-3}, {x:0, y:-2}, {x:1, y:-4}, {x: 1, y:-3}],
+     [{x: 0, y:-4}, {x:1, y:-4}, {x:1, y:-3}, {x: 2, y:-3}],
+     [{x: 1, y:-3}, {x:1, y:-2}, {x:2, y:-4}, {x: 2, y:-3}]]  //Z
   ]; //考慮要不要用對 center 關係
   this.color = ["rgba(122,199,79, 0.5)", "rgba(255,102,102, 0.5)", "rgba(55,114,255, 0.5)", "rgba(244,224,77, 0.5)", "rgba(75,41,107, 0.5)", "rgba(8,160,69, 0.5)", "rgba(97,198,236, 0.5)"]
   
   this.body = []
+  this.step = new Vector(0, 0)
   this.speed = new Vector(0, 1) //向下走
-  this.type = 0 //哪種型態的拼圖
-  this.rotate = 0 //控制不同的拼圖角度
+  this.type = parseInt(Math.random()*100)%6
+  this.rotate = parseInt(Math.random()*100)%4 //控制不同的拼圖角度
   this.repository = []
-  this.currentHeight = new Vector(1, -3) //控制目前高度，進行旋轉或型態轉換
   this.shape[this.type][this.rotate].forEach((block)=>{
     this.body.push(new Vector(block.x, block.y))
   }) //不同型態的拼圖
@@ -148,13 +149,8 @@ var DrawTetris = function(){
 DrawTetris.prototype.move = function(dir, gameWidth, gameHeight){
   var target
     if (dir == "Up" && this.checkBoundaryTop(gameWidth, gameHeight)) {
-      this.body.length = 0
-      this.rotate = (this.rotate + 1)%4
-      this.shape[this.type][this.rotate].forEach((block)=>{
-        this.body.push(new Vector(block.x, block.y))
-      })
-      console.log(this.rotate)
-      target = new Vector(0, -1)
+      this.tetrisRotate(gameWidth, gameHeight)
+      target = new Vector(0, 0)
     }
     if (dir == "Down"  && this.checkBoundaryBottom(gameWidth, gameHeight) && this.checkBoundaryRepositoryDown()) {
       target = new Vector(0, 1)
@@ -168,26 +164,129 @@ DrawTetris.prototype.move = function(dir, gameWidth, gameHeight){
     this.body.forEach((block)=>{
       block.move(target.x, target.y)
     })
+     this.step.move(target.x, target.y)
+}
 
+DrawTetris.prototype.tetrisRotate = function(gameWidth, gameHeight){
+    var nextBody = []
+    var nextRotate = (this.rotate + 1)%4
+     
+    this.shape[this.type][this.rotate].forEach((block)=>{
+      nextBody.push(new Vector(block.x + this.step.x, block.y + this.step.y))
+    })
+    
+  if(this.checkRotateBoundaryLeft(nextBody, gameWidth, gameHeight) && this.checkRotateBoundaryRight(nextBody, gameWidth, gameHeight) && this.checkRotateBoundaryTop(nextBody, gameWidth, gameHeight) && this.checkRotateBoundaryBottom(nextBody, gameWidth, gameHeight) && this.checkRotateBoundaryRepositoryDown(nextBody, gameWidth, gameHeight) && this.checkRotateBoundaryRepositoryLeft(nextBody, gameWidth, gameHeight) && this.checkRotateBoundaryRepositoryRight(nextBody, gameWidth, gameHeight)){
+    this.body.length = 0
+    this.rotate = nextRotate
+    this.body = nextBody
+  }  
 }
 
 DrawTetris.prototype.update = function(){
   
-  this.currentHeight.move(this.speed.x, this.speed.y)
-  console.log(this.currentHeight)
   this.body.forEach((block)=>{
     block.move(this.speed.x, this.speed.y)
   })
-  
+  this.step.move(this.speed.x, this.speed.y)
 }
 
 DrawTetris.prototype.newDrawTetris = function(){  
   this.body.length = 0
-  this.type = 1
+  this.type = parseInt(Math.random()*100)%6
+  this.rotate = parseInt(Math.random()*100)%4 
   this.shape[this.type][this.rotate].forEach((block)=>{
     this.body.push(new Vector(block.x, block.y))
   })
+  this.step = new Vector(0, 0)
 }
+
+//Rotate Check Start
+DrawTetris.prototype.checkRotateBoundaryLeft = function(nextRotate, gameWidth, gameHeight){
+  let xInRange = true
+  console.log(nextRotate)
+  nextRotate.forEach((block)=>{
+    let blockX
+    blockX = block.x > -1 ? true : false
+    xInRange = xInRange && blockX
+  })
+  return xInRange
+}
+
+DrawTetris.prototype.checkRotateBoundaryRight = function(nextRotate, gameWidth, gameHeight){
+  let xInRange = true
+  nextRotate.forEach((block)=>{
+    let blockX
+    blockX = block.x < gameWidth ? true : false
+    xInRange = xInRange && blockX
+  })
+  
+  return xInRange
+}
+
+
+DrawTetris.prototype.checkRotateBoundaryTop = function(nextRotate, gameWidth, gameHeight){
+  let yInRange = true
+  nextRotate.forEach((block)=>{
+    let blockY
+    blockY = block.y > 0 ? true : false
+    yInRange = yInRange && blockY
+  })
+  return yInRange
+}
+
+DrawTetris.prototype.checkRotateBoundaryBottom = function(nextRotate, gameWidth, gameHeight){
+  let yInRange = true
+  nextRotate.forEach((block)=>{
+    let blockY
+    blockY = block.y < gameHeight - 1 ? true : false
+    yInRange = yInRange && blockY
+  })
+  return yInRange
+}
+
+DrawTetris.prototype.checkRotateBoundaryRepositoryDown = function(nextRotate){
+  let yInRange = false
+  if (this.repository.length !== 0) {
+    this.repository.forEach((rblock)=>{
+      nextRotate.forEach((bblock)=>{
+        var currentLogic = false
+        currentLogic = bblock.x == rblock.x && bblock.y == rblock.y - 1 ? true : false
+        yInRange = yInRange || currentLogic
+      })
+    })
+  }
+  return !yInRange
+}
+
+DrawTetris.prototype.checkRotateBoundaryRepositoryLeft = function(nextRotate){
+  let yInRange = false
+  if (this.repository.length !== 0) {
+    this.repository.forEach((rblock)=>{
+      nextRotate.forEach((bblock)=>{
+        var currentLogic = false
+        currentLogic = bblock.x == rblock.x + 1 && bblock.y == rblock.y ? true : false
+        yInRange = yInRange || currentLogic
+      })
+    })
+  }
+  return !yInRange
+}
+
+DrawTetris.prototype.checkRotateBoundaryRepositoryRight = function(nextRotate){
+  let yInRange = false
+  if (this.repository.length !== 0) {
+    this.repository.forEach((rblock)=>{
+      nextRotate.forEach((bblock)=>{
+        var currentLogic = false
+        currentLogic = bblock.x == rblock.x - 1 && bblock.y == rblock.y ? true : false
+        yInRange = yInRange || currentLogic
+      })
+    })
+  }
+  return !yInRange
+}
+
+//Rotate Check End
 
 DrawTetris.prototype.checkBoundaryLeft = function(gameWidth, gameHeight){
   let xInRange = true
@@ -274,6 +373,10 @@ DrawTetris.prototype.checkBoundaryRepositoryRight = function(){
   return !yInRange
 }
 
+DrawTetris.prototype.checkRepositoryGetScore = function(gameWidth, gameHeight){
+  var counter = 0
+}
+
 Game.prototype.render = function(){
   this.ctx.fillStyle = "white"
   this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
@@ -284,7 +387,7 @@ Game.prototype.render = function(){
   }
   
   this.currentTetris.body.forEach((tp, i)=>{
-    this.drawBlock(tp, "green")
+    this.drawBlock(tp, this.currentTetris.color[this.currentTetris.type])
   })
   this.currentTetris.repository.forEach((sp, i)=>{
     this.drawBlock(sp, "yellow")

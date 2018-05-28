@@ -5,27 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style type="text/css">
-        canvas {
-            border: solid 1px black;
-            margin: auto 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            margin-top: 50px;
-        }
-        body {
+        html, body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
             margin: 0;
-            min-height: 100vh;
-        }
+            background-color: black;
+            }
+
+            canvas {
+            max-width: 100%;
+            }
+
+            .panel {
+            position: absolute;
+            color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            }
+
+            button {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            outline: none;
+            }
+            button:hover {
+            background-color: rgba(255, 255, 255, 0.7);
+            color: black;
+            }
+
     </style>
     <title>Document</title>
     
 </head>
 <body>
         
-    <h1>Tetris</h1>
+    <div class="panel">
+        <h2>Score: 0</h2>
+        <button onclick="game.startGame()"> Game Start </button>
+     </div>
     <canvas id="myCanvas"></canvas>
-    
 </body>
 </html>
